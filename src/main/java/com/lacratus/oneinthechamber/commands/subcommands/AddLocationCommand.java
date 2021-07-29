@@ -49,6 +49,7 @@ public class AddLocationCommand extends SubCommand {
     public boolean perform(Player player, String[] args) {
         if (!super.perform(player, args)) return false;
 
+        // Add a location to the list.
         Location location = player.getLocation();
         main.getSpawnLocations().add(location);
         SendMessage.sendMessage(player, "&8[&bOITC&8] &f Locatie toegevoegd");

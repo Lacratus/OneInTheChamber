@@ -23,6 +23,8 @@ public class GameListeners implements Listener {
     @EventHandler
     public void onGameStart(GameStartEvent event) {
         SendMessage.broadcast("&8[&bOITC&8] &f Game is starting in 20 seconds! Join queue to play!");
+
+        // Teleport all joined players to a random location
         new BukkitRunnable(){
 
             @Override
@@ -45,6 +47,7 @@ public class GameListeners implements Listener {
     }
 
     private void endGameAfterTime(int time) {
+        // Remove all players from game.
         new BukkitRunnable(){
             @Override
             public void run() {

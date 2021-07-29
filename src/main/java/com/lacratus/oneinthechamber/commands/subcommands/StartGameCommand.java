@@ -51,15 +51,19 @@ public class StartGameCommand extends SubCommand {
     public boolean perform(Player player, String[] args) {
         if (!super.perform(player, args)) return false;
 
+        // If there are no spawnlocations, u can't start
         if (main.getSpawnLocations().isEmpty()) {
             SendMessage.sendMessage(player, "&8[&bOITC&8] &f No locations initialised");
             return true;
         }
+
+        // If a game is started, u can't start again
         if (main.getGameState().equals(GameState.STARTED) || main.getGameState().equals(GameState.STARTING)) {
             SendMessage.sendMessage(player, "&;8[&bOITC&8] &f The game is already being played.");
             return true;
         }
 
+        // Start game
         Bukkit.getServer().getPluginManager().callEvent(new GameStartEvent());
         main.setGameState(GameState.STARTING);
         SendMessage.sendMessage(player, "&8[&bOITC&8] &f U are starting game");

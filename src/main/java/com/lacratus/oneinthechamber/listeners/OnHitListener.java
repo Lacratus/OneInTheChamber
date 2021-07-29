@@ -56,6 +56,7 @@ public class OnHitListener implements Listener {
             return;
         }
 
+        // If hit entity is not a a player, regenerate arrow of shooter
         if (!(event.getHitEntity() instanceof Player)) {
             oitcPlayerShooter.regenerateArrow();
             return;
@@ -69,6 +70,7 @@ public class OnHitListener implements Listener {
             return;
         }
 
+        // If player tries to hit himself, call him a cheater
         if (hitPlayer == (event.getEntity()).getShooter()) {
             hitPlayer.sendTitle("§aTrying to cheat u motherfucker?", "", 10, 25, 10);
             return;

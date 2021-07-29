@@ -30,11 +30,14 @@ public class CommandManager implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
+        // If sender is not an instance of player, do nothing
         if (!(sender instanceof Player)) {
             return false;
         }
 
         Player player = (Player) sender;
+
+        // No args or to many args gives the help command
         if (args.length == 0 || getSubCommand(args[0]) == null) {
             player.sendMessage("--------------------------------");
             for (SubCommand sub : subcommands) {
@@ -44,11 +47,15 @@ public class CommandManager implements CommandExecutor {
             return true;
         }
         SubCommand subCommand = getSubCommand(args[0]);
+
+        // If player has no permission, send message
         if (!player.hasPermission(subCommand.getPermission())) {
-            SendMessage.sendMessage(player, OneInTheChamberPlugin.getInstance().getConfig().getString("Message.NoPermission"));
+            // SendMessage.sendMessage(player, OneInTheChamberPlugin.getInstance().getConfig().getString("Message.NoPermission"));
+            SendMessage.sendMessage(player, "U have no permission to use this command");
             return true;
         }
 
+        // If subcommand cannot perform then send message
         if(!subCommand.perform(player, args)){
             SendMessage.sendMessage(player, "&8[&bOITC&8] &f Unknown Command - Use /oitc for help");
         }

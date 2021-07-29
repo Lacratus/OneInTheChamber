@@ -18,9 +18,8 @@ public class OnDisconnectListener implements Listener {
 
     @EventHandler
     public void onDisconnect(PlayerQuitEvent event){
+        // Remove player from Hashmap
         Player player = event.getPlayer();
-        OITCPlayer oitcPlayer = main.getOitcPlayers().get(player.getUniqueId());
-
         main.getOitcPlayers().remove(player.getUniqueId());
     }
 }
