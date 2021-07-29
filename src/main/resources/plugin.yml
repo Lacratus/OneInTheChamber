@@ -1,0 +1,8 @@
+name: OneInTheChamber
+version: ${project.version}
+main: com.lacratus.oneinthechamber.OneInTheChamberPlugin
+authors: [ Lacratus ]
+description: A one in the chamber plugin.
+
+commands:
+  oitc:
