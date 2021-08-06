@@ -28,6 +28,8 @@ public class OITCPlayer {
     public OITCPlayer(Player player) {
         this.player = player;
         this.uuid = player.getUniqueId();
+        this.kills = 0;
+        this.deaths = 0;
         this.isInGame = false;
     }
 
@@ -39,9 +41,10 @@ public class OITCPlayer {
         this.isInGame = false;
     }
 
+    // Give arrow back after
     public void regenerateArrow() {
         player.setExp(0F);
-        final int ticks = 20 * 10; // Replaced by config later
+        final int ticks = 20 * OneInTheChamberPlugin.getInstance().getConfig().getInt("Game.RegenerateArrowSeconds"); // Replaced by config later
         final float division = 1F / ticks;
 
         BukkitTask regenArrow = new BukkitRunnable() {

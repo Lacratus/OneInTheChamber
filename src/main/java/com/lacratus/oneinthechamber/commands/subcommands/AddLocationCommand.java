@@ -52,7 +52,7 @@ public class AddLocationCommand extends SubCommand {
         // Add a location to the list.
         Location location = player.getLocation();
         main.getSpawnLocations().add(location);
-        SendMessage.sendMessage(player, "&8[&bOITC&8] &f Locatie toegevoegd");
+        SendMessage.sendConfigMessage(player,"Message.AddLocation");
         return true;
     }
 }

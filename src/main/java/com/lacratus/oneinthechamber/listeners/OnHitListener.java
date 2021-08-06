@@ -73,16 +73,19 @@ public class OnHitListener implements Listener {
         // If player tries to hit himself, call him a cheater
         if (hitPlayer == (event.getEntity()).getShooter()) {
             hitPlayer.sendTitle("§aTrying to cheat u motherfucker?", "", 10, 25, 10);
+            oitcPlayerShooter.regenerateArrow();
             return;
         }
 
-        // Teleport hitted player to random location
+        // If no locations appointed, do nothing
         if (main.getSpawnLocations().isEmpty()) {
             Bukkit.getLogger().warning("No locations are defined");
             return;
         }
-        // Teleport player to random selected location
+        // Teleport player to random selected location and give death
         oitcPlayerHitPlayer.teleportPlayer();
+        oitcPlayerHitPlayer.setDeaths(oitcPlayerHitPlayer.getDeaths() + 1);
+        SendMessage.sendMessage(hitPlayer, "Kills: " + oitcPlayerHitPlayer.getKills() + " | Deaths: " + oitcPlayerHitPlayer.getDeaths());
 
         // Show Screens
         shooter.sendTitle("§aNice shot", "", 10, 25, 10);
@@ -93,6 +96,8 @@ public class OnHitListener implements Listener {
 
         // Give arrow back and Add stats to killer
         shooter.getInventory().addItem(arrow);
+        oitcPlayerShooter.setKills(oitcPlayerShooter.getKills() + 1);
+        SendMessage.sendMessage(shooter, "Kills: " + oitcPlayerShooter.getKills() + " | Deaths: " + oitcPlayerShooter.getDeaths());
 
         // Give items back to death and Add stats to death
         if (oitcPlayerHitPlayer.getRegenerateArrowTask() != null) {

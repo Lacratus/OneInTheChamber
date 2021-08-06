@@ -50,8 +50,7 @@ public class CommandManager implements CommandExecutor {
 
         // If player has no permission, send message
         if (!player.hasPermission(subCommand.getPermission())) {
-            // SendMessage.sendMessage(player, OneInTheChamberPlugin.getInstance().getConfig().getString("Message.NoPermission"));
-            SendMessage.sendMessage(player, "U have no permission to use this command");
+            SendMessage.sendMessage(player, OneInTheChamberPlugin.getInstance().getConfig().getString("Message.NoPermission"));
             return true;
         }
 

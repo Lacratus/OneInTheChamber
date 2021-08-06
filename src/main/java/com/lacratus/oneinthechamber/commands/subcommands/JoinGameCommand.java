@@ -51,18 +51,19 @@ public class JoinGameCommand extends SubCommand {
 
         // If game is started, u can't join
         if (main.getGameState().equals(GameState.STARTED)) {
-            SendMessage.sendMessage(player, "&8[&bOITC&8] &f The game is already being played.");
+            SendMessage.sendConfigMessage(player,"Message.GameStarted");
+
             return true;
         }
         // Join queue
         OITCPlayer oitcPlayer = main.getOitcPlayers().get(player.getUniqueId());
         if (!oitcPlayer.isInGame()) {
             oitcPlayer.setInGame(true);
-            SendMessage.sendMessage(player, "&8[&bOITC&8] &f Queue Joined");
+            SendMessage.sendConfigMessage(player,"Message.JoinQueue");
             return true;
         }
         // If in queue, can't join queue again
-        SendMessage.sendMessage(player, "&8[&bOITC&8] &f U are already in the queue");
+        SendMessage.sendConfigMessage(player,"Message.AddLocation");
         return true;
     }
 }
