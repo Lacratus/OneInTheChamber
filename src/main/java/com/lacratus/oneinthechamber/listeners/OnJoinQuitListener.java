@@ -8,8 +8,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.UUID;
-
 public class OnJoinQuitListener implements Listener {
 
     private final OneInTheChamberPlugin main;
@@ -39,5 +37,11 @@ public class OnJoinQuitListener implements Listener {
 
         // Remove player from Hashmap
         main.getOitcPlayers().remove(player.getUniqueId());
+
+        // Remove player from Arena
+        if(oitcPlayer.getArena() != null){
+            oitcPlayer.getArena().getPlayers().remove(oitcPlayer);
+            oitcPlayer.getArena().updateSigns();
+        }
     }
 }

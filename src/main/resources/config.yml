@@ -13,14 +13,19 @@ DB:
 
 Message:
   AddLocation: "&8[&bOITC&8] &f Locatie toegevoegd."
-  JoinQueue : "&8[&bOITC&8] &f Queue joined"
+  JoinGame : "&8[&bOITC&8] &f Game joined."
   GameStarted: "&8[&bOITC&8] &f The game is already being played."
-  InQueue: "&8[&bOITC&8] &f U are already in the queue"
+  InGame: "&8[&bOITC&8] &f U are already in a game."
   NoPermission: "&8[&bOITC&8] &fJe hebt geen permissie tot deze command."
   NoLocationAllocated: "&8[&bOITC&8] &f Er zijn geen locaties aangeduid."
   StartGame: "&8[&bOITC&8] &f Game is starting."
-
+  ArenaAlreadyExists: "&8[&bOITC&8] &f Arena already exists."
+  ArenaNotExist: "&8[&bOITC&8] &f Arena doesn't exist."
+  SpawnLocationNotSet: "&8[&bOITC&8] &f Arena spawnlocation is not set."
+  ArenaCreated: "&8[&bOITC&8] &f Arena successfully created"
+  ArenaDeleted: "&8[&bOITC&8] &f Arena successfully deleted"
 Game:
-  RegenerateArrowSeconds:
+  RegenerateArrowSeconds: 10
+  StandardDurationGame: 10
 
 

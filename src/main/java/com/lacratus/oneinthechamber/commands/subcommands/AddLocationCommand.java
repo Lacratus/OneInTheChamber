@@ -2,6 +2,7 @@ package com.lacratus.oneinthechamber.commands.subcommands;
 
 import com.lacratus.oneinthechamber.OneInTheChamberPlugin;
 import com.lacratus.oneinthechamber.commands.SubCommand;
+import com.lacratus.oneinthechamber.objects.Arena;
 import com.lacratus.oneinthechamber.utils.SendMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -27,31 +28,53 @@ public class AddLocationCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Add new spawnlocation";
+        return "Add new locations to the arena, Type 'Spawn' behind command to set spawnlocation." ;
     }
 
     @Override
     public String getSyntax() {
-        return "/oitc addLocation";
+        return "/oitc addLocation <Arena> [Spawn]";
     }
 
     @Override
     public int getMinimumArgs() {
-        return 1;
+        return 2;
     }
 
     @Override
     public int getMaximumArgs() {
-        return 1;
+        return 3;
     }
 
     @Override
     public boolean perform(Player player, String[] args) {
         if (!super.perform(player, args)) return false;
 
-        // Add a location to the list.
+        // Check if arena exists
+        String arenaName = args[1];
+
+        if(!main.getArenas().containsKey(arenaName)){
+            SendMessage.sendConfigMessage(player,"Message.ArenaNotExist");
+            return true;
+        }
+        // Get arena and location
+        Arena arena = main.getArenas().get(arenaName);
         Location location = player.getLocation();
-        main.getSpawnLocations().add(location);
+
+        // Set spawnlocation of lobby
+        if(args.length == 3){
+            if(args[2].equalsIgnoreCase("Spawn")) {
+                arena.setSpawnLocation(location);
+                SendMessage.sendConfigMessage(player,"Message.AddLocation");
+                return true;
+            }
+            
+            SendMessage.sendMessage(player, "&8[&bOITC&8] &f Unknown Command - Use /oitc for help");
+            return true;
+        }
+
+        // Add a location to the list.
+        arena.getLocations().add(location);
         SendMessage.sendConfigMessage(player,"Message.AddLocation");
         return true;
     }
