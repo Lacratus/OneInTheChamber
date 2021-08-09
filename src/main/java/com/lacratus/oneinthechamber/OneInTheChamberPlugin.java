@@ -8,6 +8,8 @@ import com.lacratus.oneinthechamber.enums.GameState;
 import com.lacratus.oneinthechamber.listeners.GameListeners;
 import com.lacratus.oneinthechamber.listeners.OnJoinQuitListener;
 import com.lacratus.oneinthechamber.listeners.OnHitListener;
+import com.lacratus.oneinthechamber.listeners.SignListener;
+import com.lacratus.oneinthechamber.objects.Arena;
 import com.lacratus.oneinthechamber.objects.OITCPlayer;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,15 +18,15 @@ import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter @Setter
 public final class OneInTheChamberPlugin extends JavaPlugin {
 
     private static @Getter @Setter OneInTheChamberPlugin instance;
 
-    private List<Location> spawnLocations;
+    private Map<String, Arena> arenas;
     private Map<UUID, OITCPlayer> oitcPlayers;
-    private GameState gameState;
 
     // Databasehandler
     private DataHandler dataHandler;
@@ -36,12 +38,9 @@ public final class OneInTheChamberPlugin extends JavaPlugin {
         // Initialise main
         setInstance(this);
 
-
         // Initialise Attributes
-        spawnLocations = new ArrayList<>();
-        oitcPlayers = new HashMap<>();
-
-        gameState = GameState.INACTIVE;
+        oitcPlayers = new ConcurrentHashMap<>();
+        arenas = new HashMap<>();
 
         // Databases
         boolean mySqlEnabled = this.getConfig().getBoolean("DB.Mysql.Enabled");
@@ -59,8 +58,9 @@ public final class OneInTheChamberPlugin extends JavaPlugin {
         if(mongodbEnabled){
             dataHandler = new MongoDataHandler();
             Bukkit.getLogger().info("MongoDB enabled");
-
         }
+        // Load all arenas
+        this.loadArenas();
         // Register Commands
         getCommand("Oitc").setExecutor(new CommandManager());
 
@@ -68,11 +68,24 @@ public final class OneInTheChamberPlugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new OnHitListener(), this);
         Bukkit.getPluginManager().registerEvents(new OnJoinQuitListener(), this);
         Bukkit.getPluginManager().registerEvents(new GameListeners(), this);
+        Bukkit.getPluginManager().registerEvents(new SignListener(), this);
 
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        dataHandler.saveArenas(this.arenas.values());
+    }
+
+
+    public void loadArenas(){
+        this.getDataHandler().getArenas().whenComplete(((arenas, throwable) -> {
+            if(throwable != null){
+                throwable.printStackTrace();
+                return;
+            }
+            this.setArenas(arenas);
+        }));
     }
 }

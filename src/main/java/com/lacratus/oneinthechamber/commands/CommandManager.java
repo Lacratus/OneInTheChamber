@@ -1,9 +1,7 @@
 package com.lacratus.oneinthechamber.commands;
 
 import com.lacratus.oneinthechamber.OneInTheChamberPlugin;
-import com.lacratus.oneinthechamber.commands.subcommands.AddLocationCommand;
-import com.lacratus.oneinthechamber.commands.subcommands.JoinGameCommand;
-import com.lacratus.oneinthechamber.commands.subcommands.StartGameCommand;
+import com.lacratus.oneinthechamber.commands.subcommands.*;
 import com.lacratus.oneinthechamber.utils.SendMessage;
 import lombok.Getter;
 import org.bukkit.ChatColor;
@@ -25,6 +23,9 @@ public class CommandManager implements CommandExecutor {
         subcommands.add(new AddLocationCommand());
         subcommands.add(new StartGameCommand());
         subcommands.add(new JoinGameCommand());
+        subcommands.add(new CreateArenaCommand());
+        subcommands.add(new DeleteArenaCommand());
+        subcommands.add(new ListArenaCommand());
     }
 
     @Override
@@ -57,6 +58,7 @@ public class CommandManager implements CommandExecutor {
         // If subcommand cannot perform then send message
         if(!subCommand.perform(player, args)){
             SendMessage.sendMessage(player, "&8[&bOITC&8] &f Unknown Command - Use /oitc for help");
+            SendMessage.sendMessage(player, subCommand.getSyntax());
         }
         return true;
     }

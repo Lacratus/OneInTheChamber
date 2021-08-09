@@ -1,5 +1,6 @@
 package com.lacratus.oneinthechamber.events;
 
+import com.lacratus.oneinthechamber.objects.Arena;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
@@ -13,14 +14,16 @@ public class GameEndEvent extends Event {
 
     private Player winner;
     private int score;
+    private Arena arena;
 
-    public GameEndEvent(Player winner, int score){
+    public GameEndEvent(Player winner, int score,Arena arena){
         this.winner = winner;
         this.score = score;
+        this.arena = arena;
     }
 
-    public GameEndEvent(){
-
+    public GameEndEvent(Arena arena){
+        this.arena = arena;
     }
 
     public HandlerList getHandlers() {

@@ -1,11 +1,14 @@
 package com.lacratus.oneinthechamber.data;
 
 import com.lacratus.oneinthechamber.OneInTheChamberPlugin;
+import com.lacratus.oneinthechamber.objects.Arena;
 import com.lacratus.oneinthechamber.objects.OITCPlayer;
+import com.lacratus.oneinthechamber.utils.ArenaSerializer;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.sql.*;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
@@ -73,11 +76,50 @@ public class MySQLDataHandler implements DataHandler {
         });
     }
 
-    // Week 3
     @Override
-    public void addLocation(Location location) {
-
+    public void saveArenas(Collection<Arena> arenas) {
+        CompletableFuture.runAsync(() -> {
+            try (Connection connection = openConnection()) {
+                for (Arena arena : arenas) {
+                    //PreparedStatement ps = connection.prepareStatement("UPDATE arena SET Locations = ?, Signlocations = ?, SpawnLocation = ?, Duration = ? WHERE Name= ?");
+                    PreparedStatement ps = connection.prepareStatement("INSERT INTO arena (Name, Locations,Duration) VALUES (?, ?, ?) ON DUPLICATE KEY " +
+                                                                                                "UPDATE Locations = ?, Duration = ?");
+                    ps.setString(1, arena.getName());
+                    ps.setString(2, ArenaSerializer.getSerializedLocations(arena));
+                    ps.setInt(3, arena.getDuration());
+                    ps.setString(4, ArenaSerializer.getSerializedLocations(arena));
+                    ps.setInt(5, arena.getDuration());
+                    ps.executeUpdate();
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
     }
+
+    @Override
+    public CompletableFuture<Map<String, Arena>> getArenas() {
+        return CompletableFuture.supplyAsync(() -> {
+            HashMap<String, Arena> arenas = new HashMap<>();
+            try (Connection connection = openConnection();
+                 PreparedStatement ps = connection.prepareStatement("SELECT * FROM arena")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    String name = rs.getString("Name");
+                    Arena arena = ArenaSerializer.getDeserializedLocations(name,rs.getString("Locations"));
+                    arena.setDuration(rs.getInt("Duration"));
+                    arena.updateSigns();
+                    arenas.put(name, arena);
+                }
+                rs.close();
+                return arenas;
+            } catch (SQLException e) {
+                throw new CompletionException(e);
+            }
+        });
+    }
+
 
     public Connection openConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
