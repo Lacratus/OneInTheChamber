@@ -18,6 +18,7 @@ public class OnJoinQuitListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
+        // Player gets added to list
         Player player = event.getPlayer();
         main.getDataHandler().getData(player).whenComplete(((oitcPlayer, throwable) -> {
             if(throwable != null){
@@ -31,6 +32,7 @@ public class OnJoinQuitListener implements Listener {
 
     @EventHandler
     public void onDisconnect(PlayerQuitEvent event){
+        // Save data of player
         Player player = event.getPlayer();
         OITCPlayer oitcPlayer = main.getOitcPlayers().get(player.getUniqueId());
         main.getDataHandler().saveData(oitcPlayer);

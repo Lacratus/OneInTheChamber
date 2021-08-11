@@ -87,14 +87,17 @@ public class GameListeners implements Listener {
 
         // After clicking on a arena sign
         String title = event.getInventory().getTitle();
+        // Does title of inventory not belong to an arena, do nothing
         if (!main.getArenas().containsKey(title)) {
             return;
         }
         event.setCancelled(true);
 
+        // When player clicks on "Join", they join the game
         if(event.getCurrentItem().getType() != Material.ARROW){
             return;
         }
+        // Add player to arena
         OITCPlayer oitcPlayer = main.getOitcPlayers().get(player.getUniqueId());
         Arena arena = main.getArenas().get(title);
 

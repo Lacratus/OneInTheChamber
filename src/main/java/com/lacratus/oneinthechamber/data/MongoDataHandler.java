@@ -54,6 +54,7 @@ public class MongoDataHandler implements DataHandler {
     @Override
     public void saveData(OITCPlayer oitcPlayer) {
         CompletableFuture.runAsync(() -> {
+            // Create document and put information in it
             Document document = new Document();
             System.out.println(oitcPlayer.getKills());
             System.out.println(oitcPlayer.getDeaths());
@@ -69,6 +70,7 @@ public class MongoDataHandler implements DataHandler {
 
     @Override
     public void saveArenas(Collection<Arena> arenas) {
+        // Get all arenas and save them one by one
         for (Arena arena : arenas) {
             Document document = new Document();
 

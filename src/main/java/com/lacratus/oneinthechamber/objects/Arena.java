@@ -70,6 +70,7 @@ public class Arena {
         return true;
     }
 
+    // Update all the signs of this arena
     public void updateSigns(){
         for(Sign sign : signLocations){
             System.out.println(sign.getLocation().getDirection());
@@ -105,6 +106,7 @@ public class Arena {
         System.out.println("sign updated");
     }
 
+    // Open inventory of the Arena with correct information
     public void openArenaMenu(Player player){
         Inventory arenaInventory = Bukkit.createInventory(null, 27, this.getName());
 
@@ -154,6 +156,7 @@ public class Arena {
         arenaInventory.setItem(13, status);
         arenaInventory.setItem(15, join);
 
+        // Open inventory
         player.openInventory(arenaInventory);
 
 

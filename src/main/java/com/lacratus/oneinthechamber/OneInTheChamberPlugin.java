@@ -76,9 +76,13 @@ public final class OneInTheChamberPlugin extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         dataHandler.saveArenas(this.arenas.values());
+        for(OITCPlayer oitcPlayer: oitcPlayers.values()){
+            dataHandler.saveData(oitcPlayer);
+        }
     }
 
 
+    // Load arenas into hashmap
     public void loadArenas(){
         this.getDataHandler().getArenas().whenComplete(((arenas, throwable) -> {
             if(throwable != null){
