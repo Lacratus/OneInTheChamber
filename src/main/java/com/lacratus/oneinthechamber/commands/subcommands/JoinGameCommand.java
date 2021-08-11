@@ -68,6 +68,7 @@ public class JoinGameCommand extends SubCommand {
         if (!arena.addPlayerToArena(oitcPlayer)) {
             return true;
         }
+        // Set arena of player
         oitcPlayer.setArena(arena);
         SendMessage.sendConfigMessage(player, "Message.JoinGame");
         return true;

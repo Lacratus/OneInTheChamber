@@ -23,6 +23,7 @@ public class SignListener implements Listener {
     @EventHandler
     public void onSignChance(SignChangeEvent event) {
         for (String locationName : main.getArenas().keySet()) {
+            // Check if sign is correctly filled
             if (event.getLine(0).equals("[" + locationName + "]")) {
                 Arena arena = main.getArenas().get(locationName);
 
@@ -54,9 +55,11 @@ public class SignListener implements Listener {
         if(event.getAction() ==  Action.LEFT_CLICK_BLOCK || event.getClickedBlock() == null){
             return;
         }
+        // Check if sign is clicked
         if (event.getClickedBlock().getType() == Material.SIGN_POST || event.getClickedBlock().getType() == Material.WALL_SIGN) {
             Sign sign = (Sign) event.getClickedBlock().getState();
 
+            // Open inventory of arena
             String name = sign.getLine(3);
             name = ChatColor.stripColor(name);
             Arena arena = main.getArenas().get(name);
