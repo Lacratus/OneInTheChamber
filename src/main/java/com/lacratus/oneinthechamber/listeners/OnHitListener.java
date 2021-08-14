@@ -81,6 +81,7 @@ public class OnHitListener implements Listener {
         // Teleport player to random selected location and give death
         oitcPlayerHitPlayer.teleportPlayer();
         oitcPlayerHitPlayer.setDeaths(oitcPlayerHitPlayer.getDeaths() + 1);
+        hitPlayer.getScoreboard().getTeam("deaths").setSuffix(oitcPlayerHitPlayer.getDeaths() + "");
         SendMessage.sendMessage(hitPlayer, "Kills: " + oitcPlayerHitPlayer.getKills() + " | Deaths: " + oitcPlayerHitPlayer.getDeaths());
 
         // Show Screens
@@ -93,9 +94,10 @@ public class OnHitListener implements Listener {
         // Give arrow back and Add stats to killer
         shooter.getInventory().addItem(arrow);
         oitcPlayerShooter.setKills(oitcPlayerShooter.getKills() + 1);
+        shooter.getScoreboard().getTeam("kills").setSuffix(oitcPlayerShooter.getKills() + "");
         SendMessage.sendMessage(shooter, "Kills: " + oitcPlayerShooter.getKills() + " | Deaths: " + oitcPlayerShooter.getDeaths());
 
-        // Give items back to death and Add stats to death
+        // Give items back to death
         if (oitcPlayerHitPlayer.getRegenerateArrowTask() != null) {
             oitcPlayerHitPlayer.getRegenerateArrowTask().cancel();
             hitPlayer.setExp(0F);

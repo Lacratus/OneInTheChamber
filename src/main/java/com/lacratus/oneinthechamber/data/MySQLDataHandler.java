@@ -4,6 +4,7 @@ import com.lacratus.oneinthechamber.OneInTheChamberPlugin;
 import com.lacratus.oneinthechamber.objects.Arena;
 import com.lacratus.oneinthechamber.objects.OITCPlayer;
 import com.lacratus.oneinthechamber.utils.ArenaSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -126,7 +127,7 @@ public class MySQLDataHandler implements DataHandler {
             connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.username, this.password);
             return connection;
         }
-        System.out.println("Something went wrong when opening the connection");
+        Bukkit.getLogger().warning(("Something went wrong when opening the connection"));
         return null;
     }
 

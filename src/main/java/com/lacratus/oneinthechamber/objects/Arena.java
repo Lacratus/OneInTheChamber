@@ -2,6 +2,7 @@ package com.lacratus.oneinthechamber.objects;
 
 import com.lacratus.oneinthechamber.OneInTheChamberPlugin;
 import com.lacratus.oneinthechamber.enums.GameState;
+import com.lacratus.oneinthechamber.events.GameStartEvent;
 import com.lacratus.oneinthechamber.utils.SendMessage;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -29,6 +31,7 @@ public class Arena {
     private List<Location> locations;
     private List<Sign> signLocations;
     private Location spawnLocation;
+    private BossBar bossBarWaitTimer;
     private int Duration;
 
     public Arena(String name) {
@@ -66,6 +69,15 @@ public class Arena {
 
         // teleport to lobby
         player.teleport(spawnLocation);
+
+        if(bossBarWaitTimer != null){
+            bossBarWaitTimer.addPlayer(oitcPlayer.getPlayer());
+        }
+
+        // Check if there are enough players to start the game
+        if(players.size() >= 2 && getStatus().equals(GameState.WAITING)){
+            Bukkit.getServer().getPluginManager().callEvent(new GameStartEvent(this));
+        }
         updateSigns();
         return true;
     }
@@ -73,9 +85,7 @@ public class Arena {
     // Update all the signs of this arena
     public void updateSigns(){
         for(Sign sign : signLocations){
-            System.out.println(sign.getLocation().getDirection());
             org.bukkit.material.Sign sign1 = (org.bukkit.material.Sign) sign.getData();
-            System.out.println(sign1.getFacing());
             changeSign(sign);
         }
     }
@@ -103,7 +113,6 @@ public class Arena {
         // Set name of Arena
         sign.setLine(3, ChatColor.BLUE + this.getName());
         sign.update();
-        System.out.println("sign updated");
     }
 
     // Open inventory of the Arena with correct information

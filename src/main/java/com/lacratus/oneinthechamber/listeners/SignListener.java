@@ -41,11 +41,9 @@ public class SignListener implements Listener {
     public void onSignBreak(BlockBreakEvent event) {
         // When a sign is broken, it will be removed from the list of a arena.
         if (event.getBlock().getType() == Material.SIGN_POST || event.getBlock().getType() == Material.WALL_SIGN) {
-            System.out.println("Test 2");
             Sign sign = (Sign) event.getBlock().getState();
             for (Arena arena : main.getArenas().values()) {
                 arena.getSignLocations().remove(sign);
-                System.out.println("Test 3");
             }
         }
     }

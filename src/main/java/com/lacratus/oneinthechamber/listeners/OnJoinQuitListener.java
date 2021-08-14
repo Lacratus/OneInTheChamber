@@ -2,6 +2,7 @@ package com.lacratus.oneinthechamber.listeners;
 
 import com.lacratus.oneinthechamber.OneInTheChamberPlugin;
 import com.lacratus.oneinthechamber.objects.OITCPlayer;
+import com.lacratus.oneinthechamber.utils.ScoreboardUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,6 +28,7 @@ public class OnJoinQuitListener implements Listener {
                 return;
             }
             main.getOitcPlayers().put(player.getUniqueId(), oitcPlayer);
+            ScoreboardUtil.buildScoreboard(oitcPlayer);
         }));
     }
 

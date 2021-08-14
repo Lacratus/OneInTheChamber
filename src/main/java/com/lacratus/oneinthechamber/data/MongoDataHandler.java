@@ -56,8 +56,6 @@ public class MongoDataHandler implements DataHandler {
         CompletableFuture.runAsync(() -> {
             // Create document and put information in it
             Document document = new Document();
-            System.out.println(oitcPlayer.getKills());
-            System.out.println(oitcPlayer.getDeaths());
             document.append("_id", oitcPlayer.getUuid());
             document.append("kills", oitcPlayer.getKills());
             document.append("deaths", oitcPlayer.getDeaths());
