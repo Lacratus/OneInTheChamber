@@ -2,21 +2,25 @@ package com.lacratus.oneinthechamber.objects;
 
 import com.lacratus.oneinthechamber.OneInTheChamberPlugin;
 import com.lacratus.oneinthechamber.enums.GameState;
+import com.lacratus.oneinthechamber.events.GameEndEvent;
 import com.lacratus.oneinthechamber.events.GameStartEvent;
+import com.lacratus.oneinthechamber.utils.BossbarUtil;
 import com.lacratus.oneinthechamber.utils.SendMessage;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,8 +171,99 @@ public class Arena {
 
         // Open inventory
         player.openInventory(arenaInventory);
+    }
 
+    public void startEndGame() {
+        Arena arena = this;
+        new BukkitRunnable() {
+            int count = 10;
+            @Override
+            public void run() {
+                count--;
+                for (OITCPlayer player :arena.getPlayers()) {
+                    // Remove players from the game
+                    player.removeFromGame();
+                    player.getPlayer().getInventory().clear();
+                }
+                // Create fireworks
+                for (Location location : arena.getLocations()) {
+                    Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+                    FireworkMeta fireworkMeta = firework.getFireworkMeta();
 
+                    fireworkMeta.addEffect(FireworkEffect.builder().withColor(Color.AQUA).flicker(true).build());
+
+                    firework.setFireworkMeta(fireworkMeta);
+                }
+                if (count <= 0) {
+                    // Teleport everyone to lobby
+                    for (OITCPlayer player : arena.getPlayers()) {
+                        player.getPlayer().teleport(OneInTheChamberPlugin.getInstance().getSpawnLocation());
+                    }
+                }
+                arena.setStatus(GameState.WAITING);
+                arena.updateSigns();
+                cancel();
+
+            }
+        }.runTaskTimer(OneInTheChamberPlugin.getInstance(), 0L, 2 * 20L);
+    }
+
+    public void tryStartGame(){
+        Arena arena = this;
+        // Create Bossbar
+        BossBar bossBarQueueTimer = BossbarUtil.BuildBossbarTimer("Starting", BarColor.YELLOW, 20);
+        arena.setBossBarWaitTimer(bossBarQueueTimer);
+        for (OITCPlayer oitcPlayer : arena.getPlayers()) {
+            bossBarQueueTimer.addPlayer(oitcPlayer.getPlayer());
+        }
+        // Teleport all joined players to a random location and create correct bossbars
+        new BukkitRunnable() {
+            int count = 20;
+
+            @Override
+            public void run() {
+                // If arena has less then 2 players, don't start
+                if (arena.getPlayers().size() < 2) {
+                    arena.setStatus(GameState.WAITING);
+                    arena.updateSigns();
+                    // Remove bossbar
+                    bossBarQueueTimer.removeAll();
+                    arena.setBossBarWaitTimer(null);
+                    // Stop runnable
+                    cancel();
+                }
+                // If countdown hits 0, start game
+                if ((count--) == 0) {
+                    // Remove queuetimer
+                    bossBarQueueTimer.removeAll();
+
+                    // Create new timer
+                    BossBar bossBarGameTimer = BossbarUtil.BuildBossbarTimer("Game", BarColor.RED, arena.getDuration());
+
+                    // Teleport everyone in to the game and add to Timer
+                    for (OITCPlayer oitcPlayer : arena.getPlayers()) {
+                        oitcPlayer.teleportPlayer();
+                        bossBarGameTimer.addPlayer(oitcPlayer.getPlayer());
+                    }
+                    // Start game
+                    arena.setStatus(GameState.STARTED);
+
+                    // Remove all players from game when game ens..
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            Bukkit.getServer().getPluginManager().callEvent(new GameEndEvent(arena));
+                        }
+                    }.runTaskLater(OneInTheChamberPlugin.getInstance(), 20L * arena.getDuration());
+                    SendMessage.broadcast("&8[&bOITC&8] &f Game started");
+                    // Update signs
+                    arena.updateSigns();
+
+                    // Stop runnable
+                    cancel();
+                }
+            }
+        }.runTaskTimer(OneInTheChamberPlugin.getInstance(), 0L, 20L);
     }
 
 

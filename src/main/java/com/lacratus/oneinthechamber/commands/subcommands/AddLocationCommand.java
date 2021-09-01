@@ -61,7 +61,7 @@ public class AddLocationCommand extends SubCommand {
         Arena arena = main.getArenas().get(arenaName);
         Location location = player.getLocation();
 
-        // Set spawnlocation of lobby
+        // Set spawnlocation of arena
         if(args.length == 3){
             if(args[2].equalsIgnoreCase("Spawn")) {
                 arena.setSpawnLocation(location);

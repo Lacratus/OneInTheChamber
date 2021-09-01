@@ -25,11 +25,15 @@ public final class OneInTheChamberPlugin extends JavaPlugin {
 
     private static @Getter @Setter OneInTheChamberPlugin instance;
 
+    // Maps and lists
     private Map<String, Arena> arenas;
     private Map<UUID, OITCPlayer> oitcPlayers;
 
     // Databasehandler
     private DataHandler dataHandler;
+
+    // Locations
+    private Location spawnLocation;
 
     @Override
     public void onEnable() {

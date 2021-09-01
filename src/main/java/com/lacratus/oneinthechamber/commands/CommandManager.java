@@ -26,6 +26,7 @@ public class CommandManager implements CommandExecutor {
         subcommands.add(new CreateArenaCommand());
         subcommands.add(new DeleteArenaCommand());
         subcommands.add(new ListArenaCommand());
+        subcommands.add(new SetLobbySpawnLocation());
     }
 
     @Override

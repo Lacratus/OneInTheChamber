@@ -24,6 +24,8 @@ Message:
   SpawnLocationNotSet: "&8[&bOITC&8] &f Arena spawnlocation is not set."
   ArenaCreated: "&8[&bOITC&8] &f Arena successfully created"
   ArenaDeleted: "&8[&bOITC&8] &f Arena successfully deleted"
+  LobbySpawnCreated: "&8[&bOITC&8] &f Lobbyspawn has been initialised."
+  NoLobbySpawnSet: "&8[&bOITC&8] &f Lobbyspawn is not set so the game can't start. Use /oitc setlobbyspawn."
 Game:
   RegenerateArrowSeconds: 10
   StandardDurationGame: 10

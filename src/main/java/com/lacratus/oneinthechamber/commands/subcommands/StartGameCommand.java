@@ -66,7 +66,10 @@ public class StartGameCommand extends SubCommand {
             SendMessage.sendConfigMessage(player,"Message.NoLocationAllocated");
             return true;
         }
-
+        // If lobbyspawn is not set, u can't start
+        if(main.getSpawnLocation() == null){
+            SendMessage.sendConfigMessage(player,"Message.NoLobbySpawnSet");
+        }
         // If game is started/inactive/stopped, u can't start again
         if (!(arena.getStatus().equals(GameState.WAITING))) {
             SendMessage.sendConfigMessage(player,"Message.GameStarted");
